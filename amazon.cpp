@@ -9,6 +9,7 @@
 #include "db_parser.h"
 #include "product_parser.h"
 #include "util.h"
+#include "mydatastore.h"
 
 using namespace std;
 struct ProdNameSorter {
@@ -29,7 +30,7 @@ int main(int argc, char* argv[])
      * Declare your derived DataStore object here replacing
      *  DataStore type to your derived type
      ****************/
-    DataStore ds;
+    MyDataStore ds;
 
 
 
@@ -61,7 +62,7 @@ int main(int argc, char* argv[])
     cout << "  QUIT new_db_filename               " << endl;
     cout << "====================================" << endl;
 
-    vector<Product*> hits;
+    vector<Product*> hits;//i believe this is what resulto is in mydatastore.cpp
     bool done = false;
     while(!done) {
         cout << "\nEnter command: " << endl;
@@ -100,7 +101,45 @@ int main(int argc, char* argv[])
                 done = true;
             }
 	    /* Add support for other commands here */
-
+            else if(cmd=="ADD"){
+              string user;
+              int loc;
+              
+              if(ss>>user>>loc){
+                if(hits.empty() || loc < 1 || loc>hits.size()){
+                  cout<<"Invalid request"<<endl;
+                }
+                else{
+                  Product* pro = hits[loc-1];
+                  ds.addToCart(user, pro);
+                }
+                
+                
+              }
+              else{
+                cout<<"Invalid request"<<endl;
+              }
+              //ds.addToCart
+            }
+            else if(cmd=="VIEWCART"){
+              string user;
+              if(ss>>user){//getting name of user
+                ds.viewCart(user);
+              }
+              else{
+                cout<<"Invalid Username"<<endl;
+              }
+            }
+            else if(cmd=="BUYCART"){
+              //ds.buyCart
+              string user;
+              if(ss>>user){
+                ds.buyCart(user);
+              }
+              else{
+                cout<<"Invalid Username"<<endl;
+              }
+            }
 
 
 
